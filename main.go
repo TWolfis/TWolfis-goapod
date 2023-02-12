@@ -3,7 +3,6 @@ package GoApod
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -141,7 +140,7 @@ func (a *APOD) Unwrap(resp []byte) error {
 }
 
 // DownloadImage downloads the APOD in either hd or normal definition
-func DownloadImage(a *APOD, hdURL bool, destdir string) error {
+func (a *APOD) DownloadImage(hdURL bool, destdir string) error {
 	// src holds the download source url
 	var (
 		// src url
@@ -171,7 +170,6 @@ func DownloadImage(a *APOD, hdURL bool, destdir string) error {
 	path = destdir + filename + ".jpg"
 
 	//make request to src to fetch the file
-	fmt.Println("Downloading: ", filename, " from:", src)
 	resp, err := http.Get(src)
 	if err != nil {
 		return err
