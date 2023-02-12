@@ -49,6 +49,7 @@ type APOD struct {
 	// defaults to false
 	Thumbs bool
 
+	Response  APODResponse
 	Responses []APODResponse
 }
 
@@ -136,9 +137,12 @@ func (a *APOD) MakeRequest() (string, []byte, error) {
 func (a *APOD) Unwrap(resp []byte) error {
 
 	//unmarshal the received json objects
-	err := json.Unmarshal(resp, &a.Responses)
+	err := json.Unmarshal(resp, &a.Response)
 	if err != nil {
-		return err
+		err = json.Unmarshal(resp, &a.Responses)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
