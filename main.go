@@ -159,7 +159,7 @@ func (a *APOD) DownloadImage(hdURL bool) error {
 
 	directory, _ := os.Getwd()
 	filename := a.APODResponse.Title
-	path := directory + filename + ".jpg"
+	path := directory + "/" + filename + ".jpg"
 
 	fmt.Println("Downloading image to: ", path)
 	//make request to src to fetch the file
