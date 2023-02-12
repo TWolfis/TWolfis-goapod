@@ -3,6 +3,7 @@ package GoApod
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -140,18 +141,9 @@ func (a *APOD) Unwrap(resp []byte) error {
 }
 
 // DownloadImage downloads the APOD in either hd or normal definition
-func (a *APOD) DownloadImage(hdURL bool, destdir string) error {
-	// src holds the download source url
-	var (
-		// src url
-		src string
+func (a *APOD) DownloadImage(hdURL bool) error {
 
-		// name of the file the download will be written too
-		filename string
-
-		// path stores the final path to the destination directory
-		path string
-	)
+	var src string
 
 	if hdURL {
 		if a.APODResponse.Hdurl != "" {
@@ -165,13 +157,11 @@ func (a *APOD) DownloadImage(hdURL bool, destdir string) error {
 		return errors.New("no url found")
 	}
 
-	if destdir == "" || destdir == "." {
-		destdir, _ = os.Getwd()
-	}
-	// filename is the name of the APOD title
-	filename = a.APODResponse.Title
-	path = destdir + filename + ".jpg"
+	directory, _ := os.Getwd()
+	filename := a.APODResponse.Title
+	path := directory + filename + ".jpg"
 
+	fmt.Println("Downloading image to: ", path)
 	//make request to src to fetch the file
 	resp, err := http.Get(src)
 	if err != nil {
