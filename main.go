@@ -48,16 +48,18 @@ type APOD struct {
 	// defaults to false
 	Thumbs bool
 
-	// APODResponse holds the response JSON object received by a successful call to the APOD API
-	APODResponse struct {
-		Date           string `json:"date"`
-		Explanation    string `json:"explanation"`
-		Hdurl          string `json:"hdurl"`
-		MediaType      string `json:"media_type"`
-		ServiceVersion string `json:"service_version"`
-		Title          string `json:"title"`
-		URL            string `json:"url"`
-	}
+	Responses []APODResponse
+}
+
+// APODResponse holds the response JSON object received by a successful call to the APOD API
+type APODResponse struct {
+	Date           string `json:"date"`
+	Explanation    string `json:"explanation"`
+	Hdurl          string `json:"hdurl"`
+	MediaType      string `json:"media_type"`
+	ServiceVersion string `json:"service_version"`
+	Title          string `json:"title"`
+	URL            string `json:"url"`
 }
 
 // composeQuery creates a query from a struct by marshalling it to json
@@ -133,7 +135,7 @@ func (a *APOD) MakeRequest() (string, []byte, error) {
 func (a *APOD) Unwrap(resp []byte) error {
 
 	//unmarshal the received json objects
-	err := json.Unmarshal(resp, &a.APODResponse)
+	err := json.Unmarshal(resp, &a.Responses)
 	if err != nil {
 		return err
 	}
@@ -141,24 +143,24 @@ func (a *APOD) Unwrap(resp []byte) error {
 }
 
 // DownloadImage downloads the APOD in either hd or normal definition
-func (a *APOD) DownloadImage(hdURL bool) error {
+func DownloadImage(a APODResponse, hdURL bool) error {
 
 	var src string
 
 	if hdURL {
-		if a.APODResponse.Hdurl != "" {
-			src = a.APODResponse.Hdurl
+		if a.Hdurl != "" {
+			src = a.Hdurl
 		}
 	} else if hdURL == false {
-		if a.APODResponse.URL != "" {
-			src = a.APODResponse.URL
+		if a.URL != "" {
+			src = a.URL
 		}
 	} else {
 		return errors.New("no url found")
 	}
 
 	directory, _ := os.Getwd()
-	filename := a.APODResponse.Title
+	filename := a.Title
 	path := directory + "/" + filename + ".jpg"
 
 	fmt.Println("Downloading image to: ", path)
