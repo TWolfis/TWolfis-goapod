@@ -104,7 +104,7 @@ func (a *APOD) composeQuery() (*http.Request, error) {
 	return req, nil
 }
 
-func MakeRequest(a *APOD) (string, []byte, error) {
+func (a *APOD) MakeRequest() (string, []byte, error) {
 
 	//create request
 	request, err := a.composeQuery()
