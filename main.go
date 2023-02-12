@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 /*
@@ -94,7 +95,7 @@ func (a *APOD) composeQuery() (*http.Request, error) {
 	} else if a.Date == "" && a.StartDate == "" && a.EndDate == "" && a.Count > 0 {
 		//If Date, StartDate and EndDate are not set but Count is set
 		//Add Count to Query
-		query.Add("count", string(rune(a.Count)))
+		query.Add("count", strconv.Itoa(a.Count))
 	}
 
 	if a.Thumbs {
