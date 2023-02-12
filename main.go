@@ -165,6 +165,9 @@ func (a *APOD) DownloadImage(hdURL bool, destdir string) error {
 		return errors.New("no url found")
 	}
 
+	if destdir == "" || destdir == "." {
+		destdir, _ = os.Getwd()
+	}
 	// filename is the name of the APOD title
 	filename = a.APODResponse.Title
 	path = destdir + filename + ".jpg"
