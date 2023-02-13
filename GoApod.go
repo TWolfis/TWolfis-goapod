@@ -193,3 +193,11 @@ func DownloadImage(a APODResponse, hdURL bool) error {
 
 	return nil
 }
+
+func Print(a APODResponse) {
+	fmt.Println(a.Title)
+	fmt.Println(a.Date)
+	fmt.Println(a.Explanation)
+	fmt.Println(a.URL)
+	fmt.Println(a.Hdurl)
+}
