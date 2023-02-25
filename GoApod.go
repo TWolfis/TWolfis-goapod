@@ -194,11 +194,12 @@ func DownloadImage(a APODResponse, hdURL bool) error {
 	return nil
 }
 
+// Print prints a formatted version of the APODResponse struct
 func Print(a APODResponse) {
-	fmt.Println("Title: ", a.Title)
-	fmt.Println("Date: ", a.Date)
-	fmt.Println("Explanation: ", a.Explanation)
-	fmt.Println("Media Type: ", a.MediaType)
-	fmt.Println("URL: ", a.URL)
-	fmt.Println("HD URL: ", a.Hdurl)
+	fmt.Println("Title:", a.Title)
+	fmt.Println("Date:", a.Date)
+	fmt.Println("Explanation:", a.Explanation)
+	fmt.Println("Media Type:", a.MediaType)
+	fmt.Println("URL:", a.URL)
+	fmt.Println("HD-URL:", a.Hdurl)
 }
