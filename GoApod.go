@@ -8,45 +8,14 @@ import (
 	"strconv"
 )
 
-/*
-Apod or Astronomical Picture of the Day is a picture or video uploaded by NASA every single day
-This file contains the code to work with this API using Go
-*/
-
-const (
-	Scheme   = "https"
-	Host     = "api.nasa.gov"
-	ApodPath = "/planetary/apod"
-)
-
-var (
-	// ApiKey can be overwritten with the users personal ApiKey
-	ApiKey = "DEMO_KEY"
-)
-
 // Apod contains the variables associated with the APOD API
 type Apod struct {
-
-	// Date of the Apod image to retrieve defaults to today
-	Date string
-
-	// StartDate of a date range, when requesting for a range of dates. Cannot be used with Date
-	// defaults to none, cannot be used with date
-	StartDate string
-
-	// EndDate The end of the date range, when used with StartDate.
-	// defaults to today
-	EndDate string
-
-	// Count If this is specified then count randomly chosen images will be returned.
-	// Cannot be used with date or StartDate and EndDate.
-	// defaults to none
-	Count int
-
-	// Thumbs Return the URL of video thumbnail. If an Apod is not a video, this parameter is ignored.
-	// defaults to false
-	Thumbs bool
-
+	ApiKey    string // ApiKey is the users personal ApiKey defaults to "DEMO_KEY"
+	Date      string `json:"date"`       // Date of the Apod image to retrieve defaults to today
+	StartDate string `json:"start_date"` // StartDate of a date range, when requesting for a range of dates. Cannot be used with Date, defaults to none
+	EndDate   string `json:"end_date"`   // EndDate The end of the date range, when used with StartDate, defaults to today
+	Count     int    `json:"count"`      // Count If this is specified then count randomly chosen images will be returned. Cannot be used with date or StartDate and EndDate, defaults to none
+	Thumbs    bool   `json:"thumbs"`     // Thumbs Return the URL of video thumbnail. If an Apod is not a video, this parameter is ignored, defaults to false
 	Response  ApodResponse
 	Responses []ApodResponse
 }
@@ -76,7 +45,11 @@ func (a *Apod) composeQuery() (*http.Request, error) {
 	query := req.URL.Query()
 
 	// add api_key to query
-	query.Add("api_key", ApiKey)
+	// if ApiKey is not set use the default "DEMO_KEY"
+	if a.ApiKey == "" {
+		a.ApiKey = "DEMO_KEY"
+	}
+	query.Add("api_key", a.ApiKey)
 
 	// handle various possible query parameters
 	switch {
@@ -167,9 +140,4 @@ func (a *ApodResponse) FetchImage(hdurl bool) ([]byte, error) {
 
 	body, err := io.ReadAll(resp.Body)
 	return body, err
-}
-
-// String returns a string representation of the ApodResponse
-func (a *ApodResponse) String() string {
-	return "Title: " + a.Title + "\nDate: " + a.Date + "\nExplanation: " + a.Explanation + "\nURL: " + a.URL
 }
